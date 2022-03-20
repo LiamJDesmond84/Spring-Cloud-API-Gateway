@@ -7,26 +7,24 @@ spring:
   cloud:
     gateway:
       routes:
-
         - id: USER-SERVICE
           uri: lb://USER-SERVICE
           predicates:
             - Path=/users/**
           filters:
-            - name: CircuitBreaker
-              args:
-                name: USER-SERVICE
-                fallbackuri: forward:/userServiceFallBack
-
+          - name: CircuitBreaker
+            args:
+              name: USER-SERVICE
+              fallbackUri: forward:/userServiceFallBackk
         - id: DEPARTMENT-SERVICE
           uri: lb://DEPARTMENT-SERVICE
           predicates:
             - Path=/departments/**
           filters:
-            - name: CircuitBreaker
-              args:
-                name: DEPARTMENT-SERVICE
-                fallbackuri: forward:/departmentServiceFallBack
+          - name: CircuitBreaker
+            args:
+              name: DEPARTMENT-SERVICE
+              fallbackUri: forward:/departmentServiceFallBack
                 
                 
 hystrix:
@@ -36,6 +34,15 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 4000
+            
+# for actuators
+management:
+  endpoints:
+    web:
+      exposure:
+        # to enable information use in Hystrix Dashboard
+        include: hystrix.stream
+
     
 eureka:
   client:
